@@ -1,7 +1,9 @@
 import streamlit as st
 from openai import OpenAI
 import os
-import os
+import json
+import random
+from transformers import pipeline
 
 os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
 os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "0"
