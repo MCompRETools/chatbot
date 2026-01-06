@@ -1,6 +1,6 @@
-streamlit
-openai
+streamlit==1.32.2
+transformers==4.37.2
 torch==2.1.0
-transformers
-pypdf
 sentencepiece
+huggingface_hub
+openai
