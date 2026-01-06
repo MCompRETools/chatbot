@@ -9,11 +9,20 @@ st.title("💬 Chatbot")
 st.write(
     "This is a simple chatbot for interacting on topics of Sustainable Digitalization"
 )
+@st.cache_resource
+def load_model():
+    return pipeline(
+        "text-generation",
+        model="Qwen/Qwen2.5B-0.5B-Instruct",
+        device=-1,
+        trust_remote_code=True
+    )
 
+llm = load_model()
 # Ask user for their OpenAI API key via `st.text_input`.
 # Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
 # via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
-openai_api_key = st.text_input("OpenAI API Key", type="password")
+#openai_api_key = st.text_input("OpenAI API Key", type="password")
 if not openai_api_key:
     st.info("Please add your OpenAI API key to continue.", icon="🗝️")
 else:
