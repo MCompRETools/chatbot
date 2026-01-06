@@ -62,6 +62,8 @@ if "current_question" not in st.session_state:
 
 if "question_context" not in st.session_state:
     st.session_state["question_context"] = None
+if "current_qa" not in st.session_state:
+    st.session_state.current_qa = None
 # ----------------------------
 # UI
 # ----------------------------
