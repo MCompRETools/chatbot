@@ -50,7 +50,11 @@ def generate(prompt, max_tokens=250):
 # ----------------------------
 if "messages" not in st.session_state:
     st.session_state.messages = []
+if "current_question" not in st.session_state:
+    st.session_state["current_question"] = None
 
+if "question_context" not in st.session_state:
+    st.session_state["question_context"] = None
 # ----------------------------
 # UI
 # ----------------------------
