@@ -65,6 +65,88 @@ choice = st.radio(
     "How would you like to proceed?",
     ["Knowledge Check", "Scenario-Based Activity"]
 )
+
+# ----------------------------
+# KNOWLEDGE CHECK MODE
+# ----------------------------
+if choice == "Knowledge Check":
+    question = st.text_input("Enter a sustainability-related question:")
+
+    answer = st.text_area("Your answer:")
+
+    if st.button("Submit Answer"):
+        context = retrieve_knowledge()
+
+        prompt = f"""
+SYSTEM:
+You are an academic tutor for Sustainable Digitalization.
+
+CONTEXT:
+{context}
+
+QUESTION:
+{question}
+
+STUDENT ANSWER:
+{answer}
+
+TASK:
+1. Say if the answer is correct.
+2. Correct it if needed.
+3. Ask one follow-up question.
+"""
+        response = generate(prompt)
+        st.markdown("### AI Feedback")
+        st.write(response)
+
+# ----------------------------
+# SCENARIO MODE
+# ----------------------------
+if choice == "Scenario-Based Activity":
+    scenario = random.choice(SCENARIOS)
+
+    st.markdown("### Business Scenario")
+    st.write(scenario["scenario"])
+
+    student_solution = st.text_area("Your proposed solution:")
+
+    if st.button("Evaluate Solution"):
+        prompt = f"""
+SYSTEM:
+You are an expert tutor in sustainable digitalization.
+
+SCENARIO:
+{scenario["scenario"]}
+
+STUDENT RESPONSE:
+{student_solution}
+
+TASK:
+1. Identify one sustainability benefit
+2. Identify one trade-off or risk
+3. Ask ONE probing follow-up question
+"""
+        feedback = generate(prompt)
+        st.markdown("### AI Feedback")
+        st.write(feedback)
+
+        reflection = st.text_area("Reflection (optional):")
+
+        if reflection:
+            summary_prompt = f"""
+SYSTEM:
+You are an academic evaluator.
+
+STUDENT REFLECTION:
+{reflection}
+
+TASK:
+Summarize the key learning in 3–4 lines.
+"""
+            summary = generate(summary_prompt)
+            st.markdown("### Learning Summary")
+            st.write(summary)
+
 # Ask user for their OpenAI API key via `st.text_input`.
 # Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
 # via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
