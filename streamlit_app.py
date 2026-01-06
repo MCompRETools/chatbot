@@ -44,6 +44,27 @@ def retrieve_knowledge():
 def generate(prompt, max_tokens=250):
     out = llm(prompt, max_new_tokens=max_tokens, temperature=0.6)
     return out[0]["generated_text"]
+
+# ----------------------------
+# SESSION STATE
+# ----------------------------
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# ----------------------------
+# UI
+# ----------------------------
+st.title("🌱 Sustainable Digitalization – AI Tutor")
+
+st.markdown("""
+This interactive chatbot helps you test knowledge and reason through
+real-world sustainability scenarios.
+""")
+
+choice = st.radio(
+    "How would you like to proceed?",
+    ["Knowledge Check", "Scenario-Based Activity"]
+)
 # Ask user for their OpenAI API key via `st.text_input`.
 # Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
 # via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
