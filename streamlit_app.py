@@ -15,11 +15,12 @@ st.title("💬 Chatbot")
 st.write(
     "This is a simple chatbot for interacting on topics of Sustainable Digitalization"
 )
+#TinyLlama/TinyLlama-1.1B-Chat-v1.0
 @st.cache_resource
 def load_model():
     return pipeline(
         "text-generation",
-        model="Qwen/Qwen2.5-0.5B-Instruct",
+        model="HuggingFaceTB/SmolLM-360M-Instruct",
         device=-1,
         trust_remote_code=True
     )
