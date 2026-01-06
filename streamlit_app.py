@@ -85,59 +85,41 @@ choice = st.radio(
 # ----------------------------
 if choice == "Knowledge Check":
 
-    st.subheader("Knowledge Check")
+    st.subheader("📘 Knowledge Check")
 
-    if st.session_state.current_question is None:
-        if st.button("Generate Question", key="gen_q"):
-            context = retrieve_knowledge()
-            st.session_state.question_context = context
+    if st.session_state.current_qa is None:
+        if st.button("Start Knowledge Check"):
+            st.session_state.current_qa = random.choice(QA_BANK)
 
-            question_prompt = f"""
-You are an academic tutor for Sustainable Digitalization.
+    if st.session_state.current_qa:
+        qa = st.session_state.current_qa
 
-CONTEXT:
-{context}
+        st.markdown("### Question")
+        st.write(qa["question"])
 
-TASK:
-Generate ONE short conceptual question.
-Do NOT provide the answer.
-"""
+        user_answer = st.text_area("Your answer:")
 
-            question_response = generate(question_prompt, max_tokens=80)
-            st.session_state.current_question = question_response
+        if st.button("Submit Answer"):
+            user_text = user_answer.lower()
+            matched = [
+                kw for kw in qa["keywords"] if kw.lower() in user_text
+            ]
 
-    if st.session_state.current_question is not None:
-        st.markdown("### Knowledge Question")
-        st.write(st.session_state.current_question)
+            st.markdown("### Feedback")
 
-        answer = st.text_area("Your answer:", key="student_answer")
+            if len(matched) >= max(1, len(qa["keywords"]) // 2):
+                st.success("✅ Your answer is broadly correct.")
+            else:
+                st.warning("⚠️ Your answer is partially correct or missing key points.")
 
-        if st.button("Submit Answer", key="submit_ans"):
-            evaluation_prompt = f"""
-You are an academic tutor.
+            st.markdown("**Model Answer:**")
+            st.write(qa["model_answer"])
 
-CONTEXT:
-{st.session_state.question_context}
+            st.markdown("**Key concepts expected:**")
+            st.write(", ".join(qa["keywords"]))
 
-QUESTION:
-{st.session_state.current_question}
-
-STUDENT ANSWER:
-{answer}
-
-TASK:
-1. Say if the answer is correct or partially correct.
-2. Correct misconceptions.
-3. Ask ONE follow-up question.
-"""
-
-            response = generate(evaluation_prompt, max_tokens=80)
-
-            st.markdown("### AI Feedback")
-            st.write(response)
-
-            st.session_state.current_question = None
-            st.session_state.question_context = None
+            # Reset for next question
+            st.session_state.current_qa = None
 
 
 # ----------------------------
