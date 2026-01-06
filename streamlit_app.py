@@ -25,6 +25,25 @@ def load_model():
     )
 
 llm = load_model()
+
+# ----------------------------
+# LOAD DATA
+# ----------------------------
+with open("knowledge_chunks.json", "r", encoding="utf-8") as f:
+    KNOWLEDGE = json.load(f)
+
+with open("scenarios.json", "r", encoding="utf-8") as f:
+    SCENARIOS = json.load(f)
+
+# ----------------------------
+# UTILS
+# ----------------------------
+def retrieve_knowledge():
+    return " ".join([k["text"] for k in random.sample(KNOWLEDGE, 2)])
+
+def generate(prompt, max_tokens=250):
+    out = llm(prompt, max_new_tokens=max_tokens, temperature=0.6)
+    return out[0]["generated_text"]
 # Ask user for their OpenAI API key via `st.text_input`.
 # Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
 # via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
