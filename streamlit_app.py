@@ -1,6 +1,10 @@
 import streamlit as st
 from openai import OpenAI
 import os
+import os
+
+os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
+os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "0"
 
 os.environ["HUGGINGFACE_HUB_TOKEN"] = st.secrets["HF_TOKEN"]
 MODEL_NAME = "Qwen/Qwen2.5-0.5B-Instruct"
@@ -13,7 +17,7 @@ st.write(
 def load_model():
     return pipeline(
         "text-generation",
-        model="Qwen/Qwen2.5B-0.5B-Instruct",
+        model="Qwen/Qwen2.5-0.5B-Instruct",
         device=-1,
         trust_remote_code=True
     )
