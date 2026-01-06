@@ -20,7 +20,7 @@ st.write(
 def load_model():
     return pipeline(
         "text-generation",
-        model="HuggingFaceTB/SmolLM-360M-Instruct",
+        model="TinyLlama/TinyLlama-1.1B-Chat-v1.0",
         device=-1,
         trust_remote_code=True
     )
