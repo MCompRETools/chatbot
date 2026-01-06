@@ -9,7 +9,7 @@ os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
 os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "0"
 
 os.environ["HUGGINGFACE_HUB_TOKEN"] = st.secrets["HF_TOKEN"]
-MODEL_NAME = "Qwen/Qwen2.5-0.5B-Instruct"
+MODEL_NAME = "HuggingFaceTB/SmolLM-360M-Instruct"
 # Show title and description.
 st.title("💬 Chatbot")
 st.write(
@@ -39,10 +39,16 @@ with open("scenarios.json", "r", encoding="utf-8") as f:
 # UTILS
 # ----------------------------
 def retrieve_knowledge():
-    return " ".join([k["text"] for k in random.sample(KNOWLEDGE, 2)])
+    chunk = random.choice(KNOWLEDGE)["text"]
+    return chunk[:800]   # hard limit
 
-def generate(prompt, max_tokens=250):
-    out = llm(prompt, max_new_tokens=max_tokens, temperature=0.6)
+def generate(prompt, max_tokens=80):
+    out = llm(
+        prompt,
+        max_new_tokens=max_tokens,
+        temperature=0.5,
+        do_sample=False
+    )
     return out[0]["generated_text"]
 
 # ----------------------------
@@ -78,39 +84,36 @@ choice = st.radio(
 # ----------------------------
 if choice == "Knowledge Check":
 
-    # STEP 1: Generate a question (only once)
+    st.subheader("Knowledge Check")
+
     if st.session_state.current_question is None:
-        if st.button("Generate Question"):
+        if st.button("Generate Question", key="gen_q"):
             context = retrieve_knowledge()
             st.session_state.question_context = context
 
             question_prompt = f"""
-SYSTEM:
 You are an academic tutor for Sustainable Digitalization.
 
 CONTEXT:
 {context}
 
 TASK:
-Generate ONE clear conceptual question suitable for undergraduate or postgraduate students.
+Generate ONE short conceptual question.
 Do NOT provide the answer.
 """
-            question_response = generate(question_prompt, max_tokens=120)
 
+            question_response = generate(question_prompt, max_tokens=80)
             st.session_state.current_question = question_response
 
-    # STEP 2: Show question
-    if st.session_state.current_question:
+    if st.session_state.current_question is not None:
         st.markdown("### Knowledge Question")
         st.write(st.session_state.current_question)
 
-        answer = st.text_area("Your answer:")
+        answer = st.text_area("Your answer:", key="student_answer")
 
-        # STEP 3: Evaluate answer
-        if st.button("Submit Answer"):
+        if st.button("Submit Answer", key="submit_ans"):
             evaluation_prompt = f"""
-SYSTEM:
-You are an academic tutor for Sustainable Digitalization.
+You are an academic tutor.
 
 CONTEXT:
 {st.session_state.question_context}
@@ -122,17 +125,16 @@ STUDENT ANSWER:
 {answer}
 
 TASK:
-1. State whether the answer is correct or partially correct.
-2. Correct misconceptions if any.
+1. Say if the answer is correct or partially correct.
+2. Correct misconceptions.
 3. Ask ONE follow-up question.
 """
 
-            response = generate(evaluation_prompt)
+            response = generate(evaluation_prompt, max_tokens=80)
 
             st.markdown("### AI Feedback")
             st.write(response)
 
-            # Reset for next round
             st.session_state.current_question = None
             st.session_state.question_context = None
 
