@@ -1,0 +1,158 @@
+[
+  {
+    "id": 1,
+    "question": "What are the three core dimensions of sustainable digitalisation according to DIGITAL SME?",
+    "keywords": [
+      "sustainable B2B digitalisation",
+      "green technologies",
+      "circular economy",
+      "innovation-enabling policy",
+      "regulation"
+    ],
+    "model_answer": "Sustainable digitalisation consists of sustainable B2B digitalisation, green(er) technologies and circular economy practices, and an innovation-enabling policy and regulatory framework."
+  },
+  {
+    "id": 2,
+    "question": "Why does DIGITAL SME argue against short-term investment in off-the-shelf digital solutions?",
+    "keywords": [
+      "dependency",
+      "lock-in",
+      "long-term",
+      "ecosystem",
+      "innovation"
+    ],
+    "model_answer": "Short-term investment in off-the-shelf solutions can create vendor lock-in and dependency, whereas long-term digitalisation should build innovation ecosystems and sustainable capabilities."
+  },
+  {
+    "id": 3,
+    "question": "How can digital technologies support a circular economy?",
+    "keywords": [
+      "resource efficiency",
+      "repair",
+      "reuse",
+      "life-cycle",
+      "tracking"
+    ],
+    "model_answer": "Digital technologies support a circular economy by improving resource efficiency, enabling repair and reuse, tracking product life cycles, and reducing waste."
+  },
+  {
+    "id": 4,
+    "question": "What is meant by sustainable digitalisation in the context of SMEs?",
+    "keywords": ["long-term", "economic", "environmental", "social", "SMEs"],
+    "model_answer": "Sustainable digitalisation for SMEs refers to adopting digital technologies in a way that supports long-term economic viability while also addressing environmental and social sustainability goals."
+  },
+  {
+    "id": 5,
+    "question": "Why is a long-term perspective important in sustainable digitalisation?",
+    "keywords": ["long-term", "resilience", "lock-in", "future", "innovation"],
+    "model_answer": "A long-term perspective is important because short-term digital solutions can create lock-in and dependency, whereas sustainable digitalisation builds resilience, innovation capacity, and future readiness."
+  },
+  {
+    "id": 6,
+    "question": "How does sustainable digitalisation differ from traditional digital transformation?",
+    "keywords": ["sustainability", "triple bottom line", "environmental", "social"],
+    "model_answer": "Unlike traditional digital transformation, sustainable digitalisation explicitly considers environmental and social impacts alongside economic performance."
+  },
+  {
+    "id": 7,
+    "question": "What role do digital technologies play in improving resource efficiency?",
+    "keywords": ["resource efficiency", "optimization", "monitoring", "data"],
+    "model_answer": "Digital technologies improve resource efficiency by enabling better monitoring, optimization of processes, and data-driven decision-making that reduces waste."
+  },
+  {
+    "id": 8,
+    "question": "Why is vendor lock-in considered a risk in digitalisation strategies?",
+    "keywords": ["vendor lock-in", "dependency", "flexibility", "risk"],
+    "model_answer": "Vendor lock-in is risky because it creates dependency on a single provider, reduces flexibility, and can limit future innovation and sustainability choices."
+  },
+  {
+    "id": 9,
+    "question": "How can digitalisation support environmental sustainability goals?",
+    "keywords": ["emissions", "energy efficiency", "monitoring", "environment"],
+    "model_answer": "Digitalisation supports environmental sustainability by improving energy efficiency, enabling emissions monitoring, and supporting environmentally informed decision-making."
+  },
+  {
+    "id": 10,
+    "question": "What is the connection between digitalisation and the circular economy?",
+    "keywords": ["circular economy", "reuse", "repair", "tracking", "lifecycle"],
+    "model_answer": "Digitalisation enables the circular economy by supporting product lifecycle tracking, reuse, repair, and more efficient resource management."
+  },
+  {
+    "id": 11,
+    "question": "Why are SMEs particularly vulnerable during digital transformation?",
+    "keywords": ["SMEs", "resources", "skills", "investment"],
+    "model_answer": "SMEs are vulnerable because they often have limited financial resources, digital skills, and capacity to manage complex digital transformation processes."
+  },
+  {
+    "id": 12,
+    "question": "What is meant by digital resilience?",
+    "keywords": ["resilience", "adaptability", "risk", "continuity"],
+    "model_answer": "Digital resilience refers to an organisation’s ability to adapt to technological change, manage digital risks, and maintain continuity over time."
+  },
+  {
+    "id": 13,
+    "question": "How can digital tools improve transparency in business operations?",
+    "keywords": ["transparency", "data", "traceability", "reporting"],
+    "model_answer": "Digital tools improve transparency by enabling better data collection, traceability, and reporting of business practices and impacts."
+  },
+  {
+    "id": 14,
+    "question": "What role does policy play in enabling sustainable digitalisation?",
+    "keywords": ["policy", "regulation", "support", "innovation"],
+    "model_answer": "Policy plays a key role by creating regulatory frameworks and support mechanisms that encourage innovation while promoting sustainability goals."
+  },
+  {
+    "id": 15,
+    "question": "Why is digital literacy important for sustainable digitalisation?",
+    "keywords": ["digital literacy", "skills", "adoption", "capacity"],
+    "model_answer": "Digital literacy is important because organisations and workers need the skills to effectively adopt, manage, and use digital technologies sustainably."
+  },
+  {
+    "id": 16,
+    "question": "How can data-driven decision-making support sustainability?",
+    "keywords": ["data-driven", "decision-making", "optimization", "performance"],
+    "model_answer": "Data-driven decision-making supports sustainability by enabling organisations to optimize performance, reduce waste, and assess environmental and social impacts."
+  },
+  {
+    "id": 17,
+    "question": "What is meant by inclusive digitalisation?",
+    "keywords": ["inclusion", "access", "SMEs", "digital divide"],
+    "model_answer": "Inclusive digitalisation refers to ensuring that digital technologies are accessible to all organisations and groups, including SMEs, and do not widen the digital divide."
+  },
+  {
+    "id": 18,
+    "question": "Why is interoperability important in sustainable digital systems?",
+    "keywords": ["interoperability", "flexibility", "systems", "integration"],
+    "model_answer": "Interoperability is important because it allows different systems to work together, reduces dependency on single vendors, and supports long-term sustainability."
+  },
+  {
+    "id": 19,
+    "question": "How can digitalisation contribute to economic sustainability?",
+    "keywords": ["economic sustainability", "efficiency", "competitiveness", "growth"],
+    "model_answer": "Digitalisation contributes to economic sustainability by improving efficiency, enhancing competitiveness, and supporting sustainable long-term growth."
+  },
+  {
+    "id": 20,
+    "question": "What are rebound effects in the context of digital technologies?",
+    "keywords": ["rebound effects", "efficiency", "increased consumption"],
+    "model_answer": "Rebound effects occur when efficiency gains from digital technologies lead to increased consumption, offsetting potential sustainability benefits."
+  },
+  {
+    "id": 21,
+    "question": "Why is systemic thinking important in sustainable digitalisation?",
+    "keywords": ["systemic thinking", "interdependencies", "holistic"],
+    "model_answer": "Systemic thinking is important because sustainable digitalisation involves interconnected economic, environmental, and social systems that must be considered holistically."
+  },
+  {
+    "id": 22,
+    "question": "How can digital platforms support sustainable business ecosystems?",
+    "keywords": ["platforms", "ecosystems", "collaboration", "innovation"],
+    "model_answer": "Digital platforms can support sustainable business ecosystems by enabling collaboration, knowledge sharing, and innovation across organisations."
+  },
+  {
+    "id": 23,
+    "question": "What risks arise from focusing only on economic benefits of digitalisation?",
+    "keywords": ["economic focus", "environmental", "social", "risk"],
+    "model_answer": "Focusing only on economic benefits can lead to neglect of environmental and social impacts, creating long-term sustainability risks."
+  }
+]
