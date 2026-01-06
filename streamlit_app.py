@@ -29,12 +29,12 @@ llm = load_model()
 # Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
 # via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
 #openai_api_key = st.text_input("OpenAI API Key", type="password")
-if not openai_api_key:
-    st.info("Please add your OpenAI API key to continue.", icon="🗝️")
-else:
+#if not openai_api_key:
+ #   st.info("Please add your OpenAI API key to continue.", icon="🗝️")
+#else:
 
     # Create an OpenAI client.
-    client = OpenAI(api_key=openai_api_key)
+    #client = OpenAI(api_key=openai_api_key)
 
     # Create a session state variable to store the chat messages. This ensures that the
     # messages persist across reruns.
