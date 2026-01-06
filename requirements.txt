@@ -1,2 +1,6 @@
 streamlit
 openai
+torch==2.1.0
+transformers
+pypdf
+sentencepiece
