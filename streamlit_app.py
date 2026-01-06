@@ -69,35 +69,69 @@ choice = st.radio(
 # ----------------------------
 # KNOWLEDGE CHECK MODE
 # ----------------------------
+# ----------------------------
+# KNOWLEDGE CHECK MODE (FIXED)
+# ----------------------------
 if choice == "Knowledge Check":
-    question = st.text_input("Enter a sustainability-related question:")
 
-    answer = st.text_area("Your answer:")
+    # STEP 1: Generate a question (only once)
+    if st.session_state.current_question is None:
+        if st.button("Generate Question"):
+            context = retrieve_knowledge()
+            st.session_state.question_context = context
 
-    if st.button("Submit Answer"):
-        context = retrieve_knowledge()
-
-        prompt = f"""
+            question_prompt = f"""
 SYSTEM:
 You are an academic tutor for Sustainable Digitalization.
 
 CONTEXT:
 {context}
 
+TASK:
+Generate ONE clear conceptual question suitable for undergraduate or postgraduate students.
+Do NOT provide the answer.
+"""
+            question_response = generate(question_prompt, max_tokens=120)
+
+            st.session_state.current_question = question_response
+
+    # STEP 2: Show question
+    if st.session_state.current_question:
+        st.markdown("### Knowledge Question")
+        st.write(st.session_state.current_question)
+
+        answer = st.text_area("Your answer:")
+
+        # STEP 3: Evaluate answer
+        if st.button("Submit Answer"):
+            evaluation_prompt = f"""
+SYSTEM:
+You are an academic tutor for Sustainable Digitalization.
+
+CONTEXT:
+{st.session_state.question_context}
+
 QUESTION:
-{question}
+{st.session_state.current_question}
 
 STUDENT ANSWER:
 {answer}
 
 TASK:
-1. Say if the answer is correct.
-2. Correct it if needed.
-3. Ask one follow-up question.
+1. State whether the answer is correct or partially correct.
+2. Correct misconceptions if any.
+3. Ask ONE follow-up question.
 """
-        response = generate(prompt)
-        st.markdown("### AI Feedback")
-        st.write(response)
+
+            response = generate(evaluation_prompt)
+
+            st.markdown("### AI Feedback")
+            st.write(response)
+
+            # Reset for next round
+            st.session_state.current_question = None
+            st.session_state.question_context = None
+
 
 # ----------------------------
 # SCENARIO MODE
