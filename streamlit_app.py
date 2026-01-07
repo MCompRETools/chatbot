@@ -9,7 +9,7 @@ os.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
 os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "0"
 
 os.environ["HUGGINGFACE_HUB_TOKEN"] = st.secrets["HF_TOKEN"]
-MODEL_NAME = "HuggingFaceTB/SmolLM-360M-Instruct"
+MODEL_NAME = "apple/OpenELM"
 # Show title and description.
 st.title("💬 Chatbot")
 st.write(
