@@ -27,7 +27,26 @@ def load_model():
     )
 
 llm = load_model()
+def clean_question(text):
+    # Keep only the first line
+    text = text.strip().split("\n")[0]
 
+    # Remove common prompt echoes
+    for prefix in [
+        "Question:",
+        "Here is the question:",
+        "Q:",
+        "-",
+        "*"
+    ]:
+        if text.lower().startswith(prefix.lower()):
+            text = text[len(prefix):].strip()
+
+    # Ensure it ends with '?'
+    if "?" in text:
+        text = text[: text.find("?") + 1]
+
+    return text
 # ----------------------------
 # LOAD DATA
 # ----------------------------
