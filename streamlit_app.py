@@ -16,11 +16,12 @@ st.write(
     "This is a simple chatbot for interacting on topics of Sustainable Digitalization"
 )
 #TinyLlama/TinyLlama-1.1B-Chat-v1.0
+#Qwen/Qwen2-0.5B
 @st.cache_resource
 def load_model():
     return pipeline(
         "text-generation",
-        model="MBZUAI/LaMini-GPT-774M",
+        model="apple/OpenELM",
         device=-1,
         trust_remote_code=True
     )
