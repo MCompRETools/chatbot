@@ -125,9 +125,11 @@ elif st.session_state.step == 1.0:
     st.subheader("Decision 1: Digital Infrastructure")
 
     st.markdown("""
-GreenRetail’s IT infrastructure is outdated and energy-intensive.
-The company must modernize to support analytics while meeting
-sustainability commitments.
+Scenario Context
+GreenRetail’s existing IT infrastructure is aging and energy-inefficient.
+Customer demand forecasting and inventory optimization require scalable
+digital infrastructure. However, leadership is concerned about rising energy
+consumption and public sustainability commitments.
 """)
 
     choice = st.radio(
@@ -139,22 +141,26 @@ sustainability commitments.
         ]
     )
 
-    if st.button("Confirm Decision"):
+   if st.button("Confirm Decision"):
         if choice.startswith("Low-cost"):
-            impact = {"environmental": -2, "economic": 2}
-            feedback = (
-                "Short-term cost savings are achieved, but emissions "
-                "and regulatory risks increase."
+            update_profile({"environmental": -2, "economic": 2})
+            st.session_state.last_feedback = (
+                "This choice improves short-term cost efficiency but significantly "
+                "increases carbon emissions and exposes the company to reputational "
+                "and regulatory risks."
             )
         elif choice.startswith("Renewable"):
-            impact = {"environmental": 2, "economic": -1}
-            feedback = (
-                "Environmental alignment improves, though operating costs rise."
+            update_profile({"environmental": 2, "economic": -1})
+            st.session_state.last_feedback = (
+                "This option strongly supports environmental sustainability and "
+                "aligns with GreenRetail’s public commitments, though it increases "
+                "operational costs."
             )
         else:
-            impact = {"environmental": 1}
-            feedback = (
-                "A balanced approach that introduces operational complexity."
+            update_profile({"environmental": 1})
+            st.session_state.last_feedback = (
+                "The hybrid approach balances flexibility and emissions reduction, "
+                "but increases governance and operational complexity."
             )
 
         apply_impact(impact)
@@ -186,8 +192,10 @@ elif st.session_state.step == 2.0:
     st.subheader("Decision 2: Customer Data Management")
 
     st.markdown("""
-Customer data can enable personalization and forecasting,
-but raises privacy and energy-consumption concerns.
+### Scenario Context
+GreenRetail plans to use customer data to personalize services and improve
+demand forecasting. However, increased data collection raises concerns
+around privacy, energy use, and customer trust.
 """)
 
     choice = st.radio(
@@ -201,19 +209,23 @@ but raises privacy and energy-consumption concerns.
 
     if st.button("Confirm Decision"):
         if choice.startswith("Collect"):
-            impact = {"social": -2, "environmental": -1, "governance": -1}
-            feedback = (
-                "Analytics improve, but privacy risks and energy use increase."
+            update_profile({"social": -2, "environmental": -1, "governance": -1})
+            st.session_state.last_feedback = (
+                "While analytics capabilities increase, this approach undermines "
+                "privacy, increases storage energy consumption, and may reduce "
+                "customer trust."
             )
         elif choice.startswith("Apply"):
-            impact = {"social": 2, "environmental": 1, "governance": 1}
-            feedback = (
-                "Trust and sustainability improve through responsible data use."
+            update_profile({"social": 2, "environmental": 1, "governance": 1})
+            st.session_state.last_feedback = (
+                "Data minimization strengthens trust, reduces energy use, and "
+                "aligns well with ethical and regulatory expectations."
             )
         else:
-            impact = {"economic": 1, "governance": -1}
-            feedback = (
-                "Operational simplicity improves, but transparency decreases."
+            update_profile({"economic": 1, "governance": -1})
+            st.session_state.last_feedback = (
+                "Outsourcing simplifies operations but reduces transparency and "
+                "control over sustainability practices."
             )
 
         apply_impact(impact)
@@ -245,8 +257,10 @@ elif st.session_state.step == 3.0:
     st.subheader("Decision 3: AI and Automation")
 
     st.markdown("""
-AI can optimize logistics and customer service,
-but may increase energy use and employee anxiety.
+### Scenario Context
+AI can significantly improve efficiency in logistics, pricing, and customer
+support. However, concerns exist regarding energy consumption, workforce
+impact, and algorithmic transparency.
 """)
 
     choice = st.radio(
@@ -260,21 +274,23 @@ but may increase energy use and employee anxiety.
 
     if st.button("Confirm Decision"):
         if choice.startswith("Extensive"):
-            impact = {"economic": 2, "environmental": -1, "social": -1}
-            feedback = (
-                "Efficiency improves, but ethical and energy concerns rise."
+            update_profile({"economic": 2, "environmental": -1, "social": -1})
+            st.session_state.last_feedback = (
+                "Efficiency improves significantly, but energy use rises and "
+                "employee concerns about automation increase."
             )
         elif choice.startswith("Selective"):
-            impact = {"economic": 1, "social": 1}
-            feedback = (
-                "Innovation is balanced with sustainability considerations."
+            update_profile({"economic": 1, "social": 1})
+            st.session_state.last_feedback = (
+                "This balanced approach enables innovation while maintaining "
+                "ethical oversight and manageable energy consumption."
             )
         else:
-            impact = {"environmental": 1, "economic": -1}
-            feedback = (
-                "Sustainability risks are reduced, but competitiveness may suffer."
+            update_profile({"environmental": 1, "economic": -1})
+            st.session_state.last_feedback = (
+                "Avoiding AI reduces risks but may limit competitiveness "
+                "and innovation potential."
             )
-
         apply_impact(impact)
         st.session_state.last_feedback = feedback
         log_event("Decision 3", choice)
@@ -323,9 +339,10 @@ elif st.session_state.step == 4.0:
     st.subheader("Decision 4: Organizational Culture")
 
     st.markdown("""
-Digital transformation has created uncertainty among employees.
-Leadership must decide how culture should evolve to support
-social sustainability.
+### Scenario Context
+Digital transformation is causing anxiety among employees.
+Some fear job displacement, while others lack confidence in using new systems.
+Leadership must decide how organizational culture should evolve.
 """)
 
     choice = st.radio(
@@ -339,19 +356,22 @@ social sustainability.
 
     if st.button("Confirm Decision"):
         if choice.startswith("Maintain"):
-            impact = {"social": -1}
-            feedback = (
-                "Avoids disruption but fails to address employee concerns."
+            update_profile({"social": -1})
+            st.session_state.last_feedback = (
+                "Maintaining the status quo avoids disruption but fails to address "
+                "employee concerns, risking disengagement and resistance."
             )
         elif choice.startswith("Promote"):
-            impact = {"social": 2}
-            feedback = (
-                "Trust, well-being, and long-term social sustainability improve."
+            update_profile({"social": 2})
+            st.session_state.last_feedback = (
+                "Inclusive learning and participation strengthen trust, well-being, "
+                "and long-term social sustainability."
             )
         else:
-            impact = {"social": -2}
-            feedback = (
-                "Short-term control increases, but trust and morale decline."
+            update_profile({"social": -2})
+            st.session_state.last_feedback = (
+                "Strict monitoring may improve short-term output but damages trust "
+                "and organizational culture."
             )
 
         apply_impact(impact)
@@ -383,8 +403,9 @@ elif st.session_state.step == 5.0:
     st.subheader("Decision 5: Sustainability Governance")
 
     st.markdown("""
-Stakeholders demand transparency and accountability
-for sustainability outcomes.
+### Scenario Context
+GreenRetail must demonstrate accountability for sustainability outcomes.
+Stakeholders demand transparency, while leadership seeks actionable insights.
 """)
 
     choice = st.radio(
@@ -398,21 +419,20 @@ for sustainability outcomes.
 
     if st.button("Confirm Decision"):
         if choice.startswith("Annual"):
-            impact = {"governance": 0}
-            feedback = (
-                "Transparency exists, but corrective action is slow."
+            update_profile({"governance": 0})
+            st.session_state.last_feedback = (
+                "Annual reporting offers transparency but limits timely corrective action."
             )
-        elif choice.startswith("Real-time"):
-            impact = {"governance": 2}
-            feedback = (
-                "Continuous accountability and compliance improve."
+        elif choice.startswith("Real"):
+            update_profile({"governance": 2})
+            st.session_state.last_feedback = (
+                "Real-time dashboards improve accountability and regulatory compliance."
             )
         else:
-            impact = {"economic": 1, "governance": -2}
-            feedback = (
-                "Financial focus increases sustainability blind spots."
+            update_profile({"economic": 1, "governance": -2})
+            st.session_state.last_feedback = (
+                "Financial focus increases risk of sustainability blind spots."
             )
-
         apply_impact(impact)
         st.session_state.last_feedback = feedback
         log_event("Decision 5", choice)
