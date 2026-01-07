@@ -85,41 +85,42 @@ choice = st.radio(
 # ----------------------------
 # KNOWLEDGE CHECK MODE (FIXED)
 # ----------------------------
+# ----------------------------
+# KNOWLEDGE CHECK MODE (LLM-ONLY)
+# ----------------------------
 if choice == "Knowledge Check":
 
     st.subheader("Knowledge Check")
 
+    # STEP 1: Generate a question using LLM's own knowledge
     if st.session_state.current_question is None:
         if st.button("Generate Question", key="gen_q"):
-            context = retrieve_knowledge()
-            st.session_state.question_context = context
 
-            question_prompt = f"""
+            question_prompt = """
 You are an academic tutor for Sustainable Digitalization.
 
-CONTEXT:
-{context}
-
 TASK:
-Generate ONE short conceptual question.
+Generate ONE short, clear conceptual question about sustainable digitalization
+and its impact on business practices.
+
+The question should be suitable for undergraduate or postgraduate students.
 Do NOT provide the answer.
 """
 
             question_response = generate(question_prompt, max_tokens=80)
             st.session_state.current_question = question_response
 
+    # STEP 2: Display question and accept answer
     if st.session_state.current_question is not None:
         st.markdown("### Knowledge Question")
         st.write(st.session_state.current_question)
 
         answer = st.text_area("Your answer:", key="student_answer")
 
+        # STEP 3: Evaluate answer using LLM reasoning
         if st.button("Submit Answer", key="submit_ans"):
             evaluation_prompt = f"""
-You are an academic tutor.
-
-CONTEXT:
-{st.session_state.question_context}
+You are an academic tutor specialising in sustainable digitalization and business.
 
 QUESTION:
 {st.session_state.current_question}
@@ -128,9 +129,9 @@ STUDENT ANSWER:
 {answer}
 
 TASK:
-1. Say if the answer is correct or partially correct.
-2. Correct misconceptions.
-3. Ask ONE follow-up question.
+1. State whether the answer is correct, partially correct, or incorrect.
+2. Briefly explain why.
+3. Ask ONE follow-up question to deepen understanding.
 """
 
             response = generate(evaluation_prompt, max_tokens=120)
@@ -138,8 +139,8 @@ TASK:
             st.markdown("### AI Feedback")
             st.write(response)
 
+            # Reset for next question
             st.session_state.current_question = None
-            st.session_state.question_context = None
 
 
 # ----------------------------
