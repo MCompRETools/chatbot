@@ -3,17 +3,14 @@ import streamlit as st
 # ----------------------------------
 # PAGE CONFIG
 # ----------------------------------
-st.set_page_config(
-    page_title="Scenario-Based Decision Simulation",
-    layout="centered"
-)
+st.set_page_config(page_title="Scenario-Based Decision Simulation")
 
 # ----------------------------------
 # INITIALIZE SESSION STATE
 # ----------------------------------
 if "step" not in st.session_state:
     st.session_state.step = 0
-    st.session_state.decisions = []
+    st.session_state.last_feedback = ""
     st.session_state.profile = {
         "environmental": 0,
         "economic": 0,
@@ -21,9 +18,6 @@ if "step" not in st.session_state:
         "governance": 0
     }
 
-# ----------------------------------
-# HELPER FUNCTIONS
-# ----------------------------------
 def update_profile(impact):
     for k, v in impact.items():
         st.session_state.profile[k] += v
@@ -37,36 +31,30 @@ def qualitative_label(score):
         return "Weak alignment"
 
 # ----------------------------------
-# INTRO PAGE (LEVEL 0)
+# INTRO PAGE
 # ----------------------------------
 if st.session_state.step == 0:
     st.title("🌱 Sustainable Digital Transformation at GreenRetail Ltd.")
 
     st.write("""
-You are the **Digital Strategy Lead** at *GreenRetail Ltd.*, a mid-sized retail company
-operating both online and physical stores.
-
-The organization plans to modernize its digital infrastructure to improve efficiency,
-customer experience, and data-driven decision-making. Senior leadership has committed
-to ensuring that all digital initiatives align with **environmental, social, economic,
-and governance sustainability goals**.
-
-You will now make a series of strategic decisions.  
-There are **no perfect answers** — only trade-offs.
+You are the **Digital Strategy Lead** at GreenRetail Ltd.
+Your task is to guide the company through a digital transformation
+while balancing **economic performance**, **environmental responsibility**,
+**social trust**, and **governance compliance**.
 """)
 
     if st.button("Start Scenario"):
-        st.session_state.step = 1
+        st.session_state.step = 1.0
         st.experimental_rerun()
 
 # ----------------------------------
-# LEVEL 1 – CLOUD INFRASTRUCTURE
+# DECISION 1
 # ----------------------------------
-elif st.session_state.step == 1:
+elif st.session_state.step == 1.0:
     st.subheader("Decision 1: Cloud Infrastructure Strategy")
 
     choice = st.radio(
-        "Which cloud infrastructure strategy should the company adopt?",
+        "Which strategy should the company adopt?",
         [
             "Low-cost cloud provider powered mainly by fossil fuels",
             "Renewable-powered cloud provider",
@@ -77,22 +65,35 @@ elif st.session_state.step == 1:
     if st.button("Confirm Decision"):
         if choice.startswith("Low-cost"):
             update_profile({"environmental": -2, "economic": 2, "governance": -1})
-            st.info("Lower costs achieved, but environmental impact and regulatory risks increase.")
+            st.session_state.last_feedback = (
+                "Short-term cost efficiency improves, but carbon emissions "
+                "and long-term regulatory risks increase."
+            )
         elif choice.startswith("Renewable"):
             update_profile({"environmental": 2, "economic": -1, "governance": 1})
-            st.info("Environmental performance improves, though operational costs rise.")
+            st.session_state.last_feedback = (
+                "Environmental performance improves significantly, "
+                "though operational costs rise."
+            )
         else:
-            update_profile({"environmental": 1, "economic": 0, "governance": 0})
-            st.info("A balanced approach that introduces operational complexity.")
+            update_profile({"environmental": 1})
+            st.session_state.last_feedback = (
+                "A balanced approach that reduces risk but increases system complexity."
+            )
 
-        st.session_state.decisions.append(choice)
-        st.session_state.step = 2
+        st.session_state.step = 1.1
+        st.experimental_rerun()
+
+elif st.session_state.step == 1.1:
+    st.info(st.session_state.last_feedback)
+    if st.button("Continue to next decision"):
+        st.session_state.step = 2.0
         st.experimental_rerun()
 
 # ----------------------------------
-# LEVEL 2 – DATA MANAGEMENT
+# DECISION 2
 # ----------------------------------
-elif st.session_state.step == 2:
+elif st.session_state.step == 2.0:
     st.subheader("Decision 2: Data Management Strategy")
 
     choice = st.radio(
@@ -107,22 +108,35 @@ elif st.session_state.step == 2:
     if st.button("Confirm Decision"):
         if choice.startswith("Collect"):
             update_profile({"environmental": -1, "social": -2, "governance": -1})
-            st.info("Analytics potential increases, but privacy risks and energy use rise.")
+            st.session_state.last_feedback = (
+                "Analytics potential increases, but privacy risks "
+                "and energy consumption grow."
+            )
         elif choice.startswith("Apply"):
             update_profile({"environmental": 1, "social": 2, "governance": 1})
-            st.info("Data responsibility improves with limited analytics scope.")
+            st.session_state.last_feedback = (
+                "Responsible data practices improve trust "
+                "and sustainability alignment."
+            )
         else:
             update_profile({"economic": 1, "governance": -1})
-            st.info("Operational simplicity improves, but transparency decreases.")
+            st.session_state.last_feedback = (
+                "Operational simplicity improves, but transparency decreases."
+            )
 
-        st.session_state.decisions.append(choice)
-        st.session_state.step = 3
+        st.session_state.step = 2.1
+        st.experimental_rerun()
+
+elif st.session_state.step == 2.1:
+    st.info(st.session_state.last_feedback)
+    if st.button("Continue to next decision"):
+        st.session_state.step = 3.0
         st.experimental_rerun()
 
 # ----------------------------------
-# LEVEL 3 – AI & AUTOMATION
+# DECISION 3
 # ----------------------------------
-elif st.session_state.step == 3:
+elif st.session_state.step == 3.0:
     st.subheader("Decision 3: Use of AI and Automation")
 
     choice = st.radio(
@@ -137,22 +151,33 @@ elif st.session_state.step == 3:
     if st.button("Confirm Decision"):
         if choice.startswith("Extensive"):
             update_profile({"economic": 2, "environmental": -1, "social": -1})
-            st.info("Efficiency improves, but energy and ethical concerns increase.")
+            st.session_state.last_feedback = (
+                "Efficiency increases, but ethical and environmental concerns rise."
+            )
         elif choice.startswith("Selective"):
-            update_profile({"economic": 1, "environmental": 0, "social": 1})
-            st.info("Balanced innovation with controlled sustainability risks.")
+            update_profile({"economic": 1, "social": 1})
+            st.session_state.last_feedback = (
+                "Innovation is balanced with sustainability considerations."
+            )
         else:
             update_profile({"environmental": 1, "economic": -1})
-            st.info("Sustainability risks are reduced, but competitiveness may suffer.")
+            st.session_state.last_feedback = (
+                "Sustainability risks are minimized, but competitiveness may decline."
+            )
 
-        st.session_state.decisions.append(choice)
-        st.session_state.step = 4
+        st.session_state.step = 3.1
+        st.experimental_rerun()
+
+elif st.session_state.step == 3.1:
+    st.info(st.session_state.last_feedback)
+    if st.button("Continue to next decision"):
+        st.session_state.step = 4.0
         st.experimental_rerun()
 
 # ----------------------------------
-# LEVEL 4 – EMPLOYEE UPSKILLING
+# DECISION 4
 # ----------------------------------
-elif st.session_state.step == 4:
+elif st.session_state.step == 4.0:
     st.subheader("Decision 4: Employee Digital Upskilling")
 
     choice = st.radio(
@@ -167,26 +192,37 @@ elif st.session_state.step == 4:
     if st.button("Confirm Decision"):
         if choice.startswith("Minimal"):
             update_profile({"economic": 1, "social": -2})
-            st.info("Short-term savings achieved, but workforce readiness declines.")
+            st.session_state.last_feedback = (
+                "Short-term savings are achieved, but workforce readiness declines."
+            )
         elif choice.startswith("Targeted"):
-            update_profile({"economic": 0, "social": 1})
-            st.info("Workforce capability improves without excessive cost.")
+            update_profile({"social": 1})
+            st.session_state.last_feedback = (
+                "Employees gain necessary skills without excessive investment."
+            )
         else:
             update_profile({"economic": -1, "social": 2})
-            st.info("Strong long-term resilience with higher investment.")
+            st.session_state.last_feedback = (
+                "Long-term resilience improves through strong workforce development."
+            )
 
-        st.session_state.decisions.append(choice)
-        st.session_state.step = 5
+        st.session_state.step = 4.1
+        st.experimental_rerun()
+
+elif st.session_state.step == 4.1:
+    st.info(st.session_state.last_feedback)
+    if st.button("Continue to next decision"):
+        st.session_state.step = 5.0
         st.experimental_rerun()
 
 # ----------------------------------
-# LEVEL 5 – SUSTAINABILITY GOVERNANCE
+# DECISION 5
 # ----------------------------------
-elif st.session_state.step == 5:
+elif st.session_state.step == 5.0:
     st.subheader("Decision 5: Sustainability Governance")
 
     choice = st.radio(
-        "How should sustainability performance be governed?",
+        "How should sustainability be governed?",
         [
             "Annual sustainability reporting",
             "Real-time sustainability KPIs in dashboards",
@@ -197,15 +233,26 @@ elif st.session_state.step == 5:
     if st.button("Confirm Decision"):
         if choice.startswith("Annual"):
             update_profile({"governance": 0})
-            st.info("Transparency exists, but responsiveness is limited.")
+            st.session_state.last_feedback = (
+                "Transparency exists, but responsiveness is limited."
+            )
         elif choice.startswith("Real-time"):
             update_profile({"governance": 2})
-            st.info("Continuous accountability and informed decision-making improve.")
+            st.session_state.last_feedback = (
+                "Continuous accountability and informed decision-making improve."
+            )
         else:
             update_profile({"economic": 1, "governance": -2})
-            st.info("Financial focus increases, but sustainability oversight weakens.")
+            st.session_state.last_feedback = (
+                "Financial focus increases, but sustainability oversight weakens."
+            )
 
-        st.session_state.decisions.append(choice)
+        st.session_state.step = 5.1
+        st.experimental_rerun()
+
+elif st.session_state.step == 5.1:
+    st.info(st.session_state.last_feedback)
+    if st.button("View Final Outcome"):
         st.session_state.step = 6
         st.experimental_rerun()
 
@@ -213,21 +260,17 @@ elif st.session_state.step == 5:
 # FINAL OUTCOME + REFLECTION
 # ----------------------------------
 else:
-    st.title("📈 Sustainability Outcome Summary")
+    st.title("📊 Sustainability Outcome Summary")
 
     for dim, score in st.session_state.profile.items():
-        st.write(f"**{dim.capitalize()} sustainability:** {qualitative_label(score)}")
+        st.write(f"**{dim.capitalize()}**: {qualitative_label(score)}")
 
     st.divider()
 
     st.subheader("Reflection (Manual Assessment)")
-    reflection = st.text_area(
-        "Reflect on your decisions and sustainability trade-offs:",
-        height=200,
-        max_chars=1200
+    st.text_area(
+        "Reflect on your decisions, trade-offs, and sustainability priorities:",
+        height=220
     )
 
     st.caption("Suggested length: 200–250 words")
-
-    if st.button("Submit Reflection"):
-        st.success("Simulation completed. Reflection recorded for manual grading.")
