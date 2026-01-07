@@ -21,7 +21,7 @@ st.write(
 def load_model():
     return pipeline(
         "text-generation",
-        model="apple/OpenELM",
+        model="Qwen/Qwen2-0.5B",
         device=-1,
         trust_remote_code=True
     )
