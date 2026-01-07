@@ -88,58 +88,68 @@ choice = st.radio(
 # ----------------------------
 # KNOWLEDGE CHECK MODE (LLM-ONLY)
 # ----------------------------
+# ----------------------------
+# KNOWLEDGE CHECK MODE (LLM-ONLY, NO ANSWERS)
+# ----------------------------
 if choice == "Knowledge Check":
 
     st.subheader("Knowledge Check")
 
-    # STEP 1: Generate a question using LLM's own knowledge
+    # STEP 1: Generate question
     if st.session_state.current_question is None:
         if st.button("Generate Question", key="gen_q"):
 
             question_prompt = """
-You are an academic tutor for Sustainable Digitalization.
+You are an academic tutor.
 
 TASK:
-Generate ONE short, clear conceptual question about sustainable digitalization
+Generate ONE clear, single-sentence question about sustainable digitalization
 and its impact on business practices.
 
-The question should be suitable for undergraduate or postgraduate students.
-Do NOT provide the answer.
+RULES:
+- Output ONLY the question.
+- Do NOT include explanations.
+- Do NOT include answers.
+- Do NOT include headings or formatting.
+- End with a question mark (?).
 """
 
-            question_response = generate(question_prompt, max_tokens=80)
-            st.session_state.current_question = question_response
+            raw_question = generate(question_prompt, max_tokens=60)
+            question = clean_question(raw_question)
 
-    # STEP 2: Display question and accept answer
+            st.session_state.current_question = question
+
+    # STEP 2: Display question
     if st.session_state.current_question is not None:
         st.markdown("### Knowledge Question")
         st.write(st.session_state.current_question)
 
         answer = st.text_area("Your answer:", key="student_answer")
 
-        # STEP 3: Evaluate answer using LLM reasoning
+        # STEP 3: Feedback only (NO model answer)
         if st.button("Submit Answer", key="submit_ans"):
             evaluation_prompt = f"""
-You are an academic tutor specialising in sustainable digitalization and business.
+You are an academic tutor specialising in sustainable digitalization.
 
 QUESTION:
 {st.session_state.current_question}
 
-STUDENT ANSWER:
+STUDENT RESPONSE:
 {answer}
 
 TASK:
-1. State whether the answer is correct, partially correct, or incorrect.
-2. Briefly explain why.
-3. Ask ONE follow-up question to deepen understanding.
+- Do NOT provide the correct answer.
+- State whether the response is correct, partially correct, or incorrect.
+- Explain briefly what is missing or needs improvement.
+- Ask ONE follow-up question.
 """
 
-            response = generate(evaluation_prompt, max_tokens=120)
+            feedback = generate(evaluation_prompt, max_tokens=120)
 
-            st.markdown("### AI Feedback")
-            st.write(response)
+            st.markdown("### Feedback")
+            st.write(feedback)
 
-            # Reset for next question
+            # Reset
             st.session_state.current_question = None
 
 
