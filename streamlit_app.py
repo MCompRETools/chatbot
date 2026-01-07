@@ -17,6 +17,7 @@ st.set_page_config(
 if "step" not in st.session_state:
     st.session_state.step = 0
     st.session_state.last_feedback = ""
+    st.session_state.last_impact = {}
     st.session_state.start_time = time.time()
     st.session_state.analytics = []
     st.session_state.profile = {
@@ -39,9 +40,15 @@ def log_event(stage, label):
     })
     st.session_state.start_time = time.time()
 
-def update_profile(impact):
+def apply_impact(impact):
+    st.session_state.last_impact = impact
     for k, v in impact.items():
         st.session_state.profile[k] += v
+
+def rollback_impact():
+    for k, v in st.session_state.last_impact.items():
+        st.session_state.profile[k] -= v
+    st.session_state.last_impact = {}
 
 def qualitative_label(score):
     if score >= 2:
@@ -66,15 +73,15 @@ def progress(level):
     st.caption(f"Progress: Level {level} of 5")
 
 # -------------------------------------------------
-# INTRO PAGE – DETAILED COMPANY CONTEXT
+# INTRO PAGE
 # -------------------------------------------------
 if st.session_state.step == 0:
     st.title("🌱 GreenRetail Ltd. – Sustainable Digital Transformation")
 
     st.markdown("""
 ### Company Overview
-**GreenRetail Ltd.** is a mid-sized omnichannel retail organization operating across
-physical stores and a rapidly growing digital platform. The company sells consumer
+**GreenRetail Ltd.** is a mid-sized omnichannel (across all channels, including online, mobile, and in-store)
+retail organization operating across physical stores and a rapidly growing digital platform. The company sells consumer
 goods sourced from regional suppliers, emphasizing ethical sourcing and customer trust.
 
 ### What GreenRetail Delivers
@@ -94,7 +101,7 @@ GreenRetail has committed to:
 The company promotes:
 - Collaboration between IT, business, and sustainability teams  
 - Employee well-being and continuous learning  
-- Ethical decision-making over short-term gains  
+- Ethical decision-making over short-term gains 
 - Openness to change, but with internal resistance to rapid digital disruption  
 
 ### Your Role
@@ -111,170 +118,183 @@ There are **no perfect answers**.
         st.experimental_rerun()
 
 # -------------------------------------------------
-# DECISION 1 – DIGITAL INFRASTRUCTURE
+# DECISION 1
 # -------------------------------------------------
 elif st.session_state.step == 1.0:
     progress(1)
-    st.subheader("Decision 1: Digital Infrastructure Strategy")
+    st.subheader("Decision 1: Digital Infrastructure")
 
     st.markdown("""
-### Scenario Context
-GreenRetail’s existing IT infrastructure is aging and energy-inefficient.
-Customer demand forecasting and inventory optimization require scalable
-digital infrastructure. However, leadership is concerned about rising energy
-consumption and public sustainability commitments.
+GreenRetail’s IT infrastructure is outdated and energy-intensive.
+The company must modernize to support analytics while meeting
+sustainability commitments.
 """)
 
     choice = st.radio(
-        "Which infrastructure strategy should GreenRetail adopt?",
+        "Which infrastructure strategy should be adopted?",
         [
-            "Low-cost cloud provider with fossil-fuel-heavy energy mix",
+            "Low-cost fossil-fuel-based cloud",
             "Renewable-powered cloud provider",
-            "Hybrid cloud combining on-premise and cloud systems"
+            "Hybrid cloud model"
         ]
     )
 
     if st.button("Confirm Decision"):
         if choice.startswith("Low-cost"):
-            update_profile({"environmental": -2, "economic": 2})
-            st.session_state.last_feedback = (
-                "This choice improves short-term cost efficiency but significantly "
-                "increases carbon emissions and exposes the company to reputational "
-                "and regulatory risks."
+            impact = {"environmental": -2, "economic": 2}
+            feedback = (
+                "Short-term cost savings are achieved, but emissions "
+                "and regulatory risks increase."
             )
         elif choice.startswith("Renewable"):
-            update_profile({"environmental": 2, "economic": -1})
-            st.session_state.last_feedback = (
-                "This option strongly supports environmental sustainability and "
-                "aligns with GreenRetail’s public commitments, though it increases "
-                "operational costs."
+            impact = {"environmental": 2, "economic": -1}
+            feedback = (
+                "Environmental alignment improves, though operating costs rise."
             )
         else:
-            update_profile({"environmental": 1})
-            st.session_state.last_feedback = (
-                "The hybrid approach balances flexibility and emissions reduction, "
-                "but increases governance and operational complexity."
+            impact = {"environmental": 1}
+            feedback = (
+                "A balanced approach that introduces operational complexity."
             )
 
+        apply_impact(impact)
+        st.session_state.last_feedback = feedback
         log_event("Decision 1", choice)
         st.session_state.step = 1.1
         st.experimental_rerun()
 
 elif st.session_state.step == 1.1:
     st.info(st.session_state.last_feedback)
-    if st.button("Continue"):
-        log_event("Feedback 1", "Viewed")
-        st.session_state.step = 2.0
-        st.experimental_rerun()
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("⬅ Back"):
+            rollback_impact()
+            st.session_state.step = 1.0
+            st.experimental_rerun()
+    with col2:
+        if st.button("Continue"):
+            log_event("Feedback 1", "Viewed")
+            st.session_state.step = 2.0
+            st.experimental_rerun()
 
 # -------------------------------------------------
-# DECISION 2 – DATA MANAGEMENT
+# DECISION 2
 # -------------------------------------------------
 elif st.session_state.step == 2.0:
     progress(2)
     st.subheader("Decision 2: Customer Data Management")
 
     st.markdown("""
-### Scenario Context
-GreenRetail plans to use customer data to personalize services and improve
-demand forecasting. However, increased data collection raises concerns
-around privacy, energy use, and customer trust.
+Customer data can enable personalization and forecasting,
+but raises privacy and energy-consumption concerns.
 """)
 
     choice = st.radio(
         "How should customer data be managed?",
         [
-            "Collect and store all possible customer data",
-            "Apply strict data minimization principles",
-            "Outsource analytics to third-party vendors"
+            "Collect all available data",
+            "Apply data minimization principles",
+            "Outsource analytics to third parties"
         ]
     )
 
     if st.button("Confirm Decision"):
         if choice.startswith("Collect"):
-            update_profile({"social": -2, "environmental": -1, "governance": -1})
-            st.session_state.last_feedback = (
-                "While analytics capabilities increase, this approach undermines "
-                "privacy, increases storage energy consumption, and may reduce "
-                "customer trust."
+            impact = {"social": -2, "environmental": -1, "governance": -1}
+            feedback = (
+                "Analytics improve, but privacy risks and energy use increase."
             )
         elif choice.startswith("Apply"):
-            update_profile({"social": 2, "environmental": 1, "governance": 1})
-            st.session_state.last_feedback = (
-                "Data minimization strengthens trust, reduces energy use, and "
-                "aligns well with ethical and regulatory expectations."
+            impact = {"social": 2, "environmental": 1, "governance": 1}
+            feedback = (
+                "Trust and sustainability improve through responsible data use."
             )
         else:
-            update_profile({"economic": 1, "governance": -1})
-            st.session_state.last_feedback = (
-                "Outsourcing simplifies operations but reduces transparency and "
-                "control over sustainability practices."
+            impact = {"economic": 1, "governance": -1}
+            feedback = (
+                "Operational simplicity improves, but transparency decreases."
             )
 
+        apply_impact(impact)
+        st.session_state.last_feedback = feedback
         log_event("Decision 2", choice)
         st.session_state.step = 2.1
         st.experimental_rerun()
 
 elif st.session_state.step == 2.1:
     st.info(st.session_state.last_feedback)
-    if st.button("Continue"):
-        log_event("Feedback 2", "Viewed")
-        st.session_state.step = 3.0
-        st.experimental_rerun()
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("⬅ Back"):
+            rollback_impact()
+            st.session_state.step = 2.0
+            st.experimental_rerun()
+    with col2:
+        if st.button("Continue"):
+            log_event("Feedback 2", "Viewed")
+            st.session_state.step = 3.0
+            st.experimental_rerun()
 
 # -------------------------------------------------
-# DECISION 3 – AI USAGE
+# DECISION 3
 # -------------------------------------------------
 elif st.session_state.step == 3.0:
     progress(3)
-    st.subheader("Decision 3: Use of AI and Automation")
+    st.subheader("Decision 3: AI and Automation")
 
     st.markdown("""
-### Scenario Context
-AI can significantly improve efficiency in logistics, pricing, and customer
-support. However, concerns exist regarding energy consumption, workforce
-impact, and algorithmic transparency.
+AI can optimize logistics and customer service,
+but may increase energy use and employee anxiety.
 """)
 
     choice = st.radio(
-        "How should AI be deployed?",
+        "How should AI be used?",
         [
-            "Extensive AI deployment across operations",
-            "Selective AI use for high-impact areas only",
-            "Avoid AI due to sustainability and ethical concerns"
+            "Extensive AI deployment",
+            "Selective AI deployment",
+            "Avoid AI"
         ]
     )
 
     if st.button("Confirm Decision"):
         if choice.startswith("Extensive"):
-            update_profile({"economic": 2, "environmental": -1, "social": -1})
-            st.session_state.last_feedback = (
-                "Efficiency improves significantly, but energy use rises and "
-                "employee concerns about automation increase."
+            impact = {"economic": 2, "environmental": -1, "social": -1}
+            feedback = (
+                "Efficiency improves, but ethical and energy concerns rise."
             )
         elif choice.startswith("Selective"):
-            update_profile({"economic": 1, "social": 1})
-            st.session_state.last_feedback = (
-                "This balanced approach enables innovation while maintaining "
-                "ethical oversight and manageable energy consumption."
+            impact = {"economic": 1, "social": 1}
+            feedback = (
+                "Innovation is balanced with sustainability considerations."
             )
         else:
-            update_profile({"environmental": 1, "economic": -1})
-            st.session_state.last_feedback = (
-                "Avoiding AI reduces risks but may limit competitiveness "
-                "and innovation potential."
+            impact = {"environmental": 1, "economic": -1}
+            feedback = (
+                "Sustainability risks are reduced, but competitiveness may suffer."
             )
 
+        apply_impact(impact)
+        st.session_state.last_feedback = feedback
         log_event("Decision 3", choice)
         st.session_state.step = 3.1
         st.experimental_rerun()
 
 elif st.session_state.step == 3.1:
     st.info(st.session_state.last_feedback)
-    if st.button("Continue"):
-        log_event("Feedback 3", "Viewed")
-        st.session_state.step = 3.2
-        st.experimental_rerun()
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("⬅ Back"):
+            rollback_impact()
+            st.session_state.step = 3.0
+            st.experimental_rerun()
+    with col2:
+        if st.button("Continue"):
+            log_event("Feedback 3", "Viewed")
+            st.session_state.step = 3.2
+            st.experimental_rerun()
 
 # -------------------------------------------------
 # REGULATORY SHOCK
@@ -283,12 +303,10 @@ elif st.session_state.step == 3.2:
     st.warning("""
 🚨 **Regulatory Update**
 
-New regulations now mandate:
-- Transparent carbon reporting for digital systems  
-- Stronger data governance controls  
-- Evidence of employee training for digital tools  
-
-All remaining decisions must comply with these requirements.
+New regulations require:
+- Carbon reporting for digital systems
+- Stronger data governance
+- Evidence of employee digital training
 """)
 
     log_event("Shock Event", "Regulatory update")
@@ -298,58 +316,64 @@ All remaining decisions must comply with these requirements.
         st.experimental_rerun()
 
 # -------------------------------------------------
-# DECISION 4 – ORGANIZATIONAL CULTURE (SOCIAL SUSTAINABILITY)
+# DECISION 4 – ORGANIZATIONAL CULTURE
 # -------------------------------------------------
 elif st.session_state.step == 4.0:
     progress(4)
-    st.subheader("Decision 4: Organizational Culture and Social Sustainability")
+    st.subheader("Decision 4: Organizational Culture")
 
     st.markdown("""
-### Scenario Context
-Digital transformation is causing anxiety among employees.
-Some fear job displacement, while others lack confidence in using new systems.
-Leadership must decide how organizational culture should evolve.
+Digital transformation has created uncertainty among employees.
+Leadership must decide how culture should evolve to support
+social sustainability.
 """)
 
     choice = st.radio(
-        "What cultural change should GreenRetail implement?",
+        "What cultural change should be implemented?",
         [
-            "Maintain existing culture and focus mainly on performance targets",
-            "Promote inclusive digital learning and employee participation",
-            "Implement strict digital performance monitoring"
+            "Maintain existing performance-driven culture",
+            "Promote inclusive learning and participation",
+            "Introduce strict digital performance monitoring"
         ]
     )
 
     if st.button("Confirm Decision"):
         if choice.startswith("Maintain"):
-            update_profile({"social": -1})
-            st.session_state.last_feedback = (
-                "Maintaining the status quo avoids disruption but fails to address "
-                "employee concerns, risking disengagement and resistance."
+            impact = {"social": -1}
+            feedback = (
+                "Avoids disruption but fails to address employee concerns."
             )
         elif choice.startswith("Promote"):
-            update_profile({"social": 2})
-            st.session_state.last_feedback = (
-                "Inclusive learning and participation strengthen trust, well-being, "
-                "and long-term social sustainability."
+            impact = {"social": 2}
+            feedback = (
+                "Trust, well-being, and long-term social sustainability improve."
             )
         else:
-            update_profile({"social": -2})
-            st.session_state.last_feedback = (
-                "Strict monitoring may improve short-term output but damages trust "
-                "and organizational culture."
+            impact = {"social": -2}
+            feedback = (
+                "Short-term control increases, but trust and morale decline."
             )
 
+        apply_impact(impact)
+        st.session_state.last_feedback = feedback
         log_event("Decision 4", choice)
         st.session_state.step = 4.1
         st.experimental_rerun()
 
 elif st.session_state.step == 4.1:
     st.info(st.session_state.last_feedback)
-    if st.button("Continue"):
-        log_event("Feedback 4", "Viewed")
-        st.session_state.step = 5.0
-        st.experimental_rerun()
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("⬅ Back"):
+            rollback_impact()
+            st.session_state.step = 4.0
+            st.experimental_rerun()
+    with col2:
+        if st.button("Continue"):
+            log_event("Feedback 4", "Viewed")
+            st.session_state.step = 5.0
+            st.experimental_rerun()
 
 # -------------------------------------------------
 # DECISION 5 – GOVERNANCE
@@ -359,9 +383,8 @@ elif st.session_state.step == 5.0:
     st.subheader("Decision 5: Sustainability Governance")
 
     st.markdown("""
-### Scenario Context
-GreenRetail must demonstrate accountability for sustainability outcomes.
-Stakeholders demand transparency, while leadership seeks actionable insights.
+Stakeholders demand transparency and accountability
+for sustainability outcomes.
 """)
 
     choice = st.radio(
@@ -375,30 +398,40 @@ Stakeholders demand transparency, while leadership seeks actionable insights.
 
     if st.button("Confirm Decision"):
         if choice.startswith("Annual"):
-            update_profile({"governance": 0})
-            st.session_state.last_feedback = (
-                "Annual reporting offers transparency but limits timely corrective action."
+            impact = {"governance": 0}
+            feedback = (
+                "Transparency exists, but corrective action is slow."
             )
-        elif choice.startswith("Real"):
-            update_profile({"governance": 2})
-            st.session_state.last_feedback = (
-                "Real-time dashboards improve accountability and regulatory compliance."
+        elif choice.startswith("Real-time"):
+            impact = {"governance": 2}
+            feedback = (
+                "Continuous accountability and compliance improve."
             )
         else:
-            update_profile({"economic": 1, "governance": -2})
-            st.session_state.last_feedback = (
-                "Financial focus increases risk of sustainability blind spots."
+            impact = {"economic": 1, "governance": -2}
+            feedback = (
+                "Financial focus increases sustainability blind spots."
             )
 
+        apply_impact(impact)
+        st.session_state.last_feedback = feedback
         log_event("Decision 5", choice)
         st.session_state.step = 5.1
         st.experimental_rerun()
 
 elif st.session_state.step == 5.1:
     st.info(st.session_state.last_feedback)
-    if st.button("View Final Outcome"):
-        st.session_state.step = 6
-        st.experimental_rerun()
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("⬅ Back"):
+            rollback_impact()
+            st.session_state.step = 5.0
+            st.experimental_rerun()
+    with col2:
+        if st.button("View Final Outcome"):
+            st.session_state.step = 6
+            st.experimental_rerun()
 
 # -------------------------------------------------
 # FINAL OUTCOME + REFLECTION
@@ -413,7 +446,7 @@ else:
     st.subheader("Reflection")
 
     reflection = st.text_area(
-        "Reflect on your decisions, trade-offs, and organizational impacts:",
+        "Reflect on your decisions and sustainability trade-offs:",
         height=220
     )
 
