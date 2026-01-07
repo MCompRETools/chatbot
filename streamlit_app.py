@@ -81,7 +81,35 @@ if st.session_state.step == 0:
     st.markdown("""
 ### Company Overview
 **GreenRetail Ltd.** is a mid-sized omnichannel (across all channels, including online, mobile, and in-store)
-retail organization operating across physical stores and a rapidly growing digital platform.
+retail organization operating across physical stores and a rapidly growing digital platform. The company sells consumer
+goods sourced from regional suppliers, emphasizing ethical sourcing and customer trust.
+
+### What GreenRetail Delivers
+- Affordable and accessible retail products  
+- Seamless digital shopping experiences  
+- Transparent supply-chain information  
+- Personalized customer engagement through digital platforms  
+
+### Sustainability Policies
+GreenRetail has committed to:
+- Reducing digital and operational carbon footprint  
+- Responsible data usage and customer privacy  
+- Fair labor practices across digital and physical operations  
+- Compliance with emerging sustainability regulations  
+
+### Organizational Culture
+The company promotes:
+- Collaboration between IT, business, and sustainability teams  
+- Employee well-being and continuous learning  
+- Ethical decision-making over short-term gains  
+- Openness to change, but with internal resistance to rapid digital disruption  
+
+### Your Role
+You are the **Digital Strategy Lead**, responsible for guiding GreenRetail’s digital
+transformation while balancing **business performance** and **sustainability goals**.
+
+You will face a series of decisions. Each decision has trade-offs.
+There are **no perfect answers**.
 """)
 
     if st.button("Begin Scenario"):
@@ -99,6 +127,9 @@ elif st.session_state.step == 1.0:
     st.markdown("""
 Scenario Context
 GreenRetail’s existing IT infrastructure is aging and energy-inefficient.
+Customer demand forecasting and inventory optimization require scalable
+digital infrastructure. However, leadership is concerned about rising energy
+consumption and public sustainability commitments.
 """)
 
     choice = st.radio(
@@ -115,17 +146,21 @@ GreenRetail’s existing IT infrastructure is aging and energy-inefficient.
             update_profile({"environmental": -2, "economic": 2})
             st.session_state.last_feedback = (
                 "This choice improves short-term cost efficiency but significantly "
-                "increases carbon emissions."
+                "increases carbon emissions and exposes the company to reputational "
+                "and regulatory risks."
             )
         elif choice.startswith("Renewable"):
             update_profile({"environmental": 2, "economic": -1})
             st.session_state.last_feedback = (
-                "This option strongly supports environmental sustainability."
+                "This option strongly supports environmental sustainability and "
+                "aligns with GreenRetail’s public commitments, though it increases "
+                "operational costs."
             )
         else:
             update_profile({"environmental": 1})
             st.session_state.last_feedback = (
-                "The hybrid approach balances flexibility and emissions reduction."
+                "The hybrid approach balances flexibility and emissions reduction, "
+                "but increases governance and operational complexity."
             )
 
         apply_impact(impact)
@@ -133,18 +168,3 @@ GreenRetail’s existing IT infrastructure is aging and energy-inefficient.
         log_event("Decision 1", choice)
         st.session_state.step = 1.1
         st.experimental_rerun()
-
-elif st.session_state.step == 1.1:
-    st.info(st.session_state.last_feedback)
-
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("⬅ Back"):
-            rollback_impact()
-            st.session_state.step = 1.0
-            st.experimental_rerun()
-    with col2:
-        if st.button("Continue"):
-            log_event("Feedback 1", "Viewed")
-            st.session_state.step = 2.0
-            st.experimental_rerun()
